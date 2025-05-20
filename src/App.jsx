@@ -17,7 +17,7 @@ import Preloader from './Components/Preloader';
 import ProtectedRoute from './Components/ProtectedRoute';
 import AdminLayout from './Components/AdminLayout';
 
-// Pages
+// Pagess
 import About from './Pages/About';
 import Cart from './Pages/cart';
 import Collection from './Pages/Collection';

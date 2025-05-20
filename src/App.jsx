@@ -11,7 +11,7 @@ import ShopContextProvider from './Context/shopcontext';
 
 // Components
 import Footer from './Components/Fotter';
-import Navbar from './Components/Navbar';
+import Navbar from './Components/navbar';
 import Search from './Components/Search';
 import Preloader from './Components/Preloader';
 import ProtectedRoute from './Components/ProtectedRoute';

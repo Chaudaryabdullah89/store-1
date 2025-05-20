@@ -19,7 +19,7 @@ import AdminLayout from './Components/AdminLayout';
 
 // Pages
 import About from './Pages/About';
-import Cart from './Pages/Cart';
+import Cart from './Pages/cart';
 import Collection from './Pages/Collection';
 import Contact from './Pages/Contact';
 import Home from './Pages/Home';

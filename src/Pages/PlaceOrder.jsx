@@ -3,12 +3,9 @@ import { motion } from 'framer-motion';
 import { ShopContext } from '../Context/shopcontext';
 import { useNavigate } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import axios from 'axios';
+import api from '../utils/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../Context/AuthContext';
-
-// Configure axios with base URL
-axios.defaults.baseURL = 'http://localhost:5000/api';
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
@@ -157,7 +154,7 @@ const PlaceOrder = () => {
 
       if (formData.paymentMethod === 'card') {
         // Create payment intent
-        const { data: paymentIntent } = await axios.post('/payments/create-intent', {
+        const { data: paymentIntent } = await api.post('/payments/create-intent', {
           amount: Math.round(orderSummary.total * 100), // Convert to cents
           currency: 'usd'
         });
@@ -193,7 +190,7 @@ const PlaceOrder = () => {
       }
 
       // Create the order
-      const { data } = await axios.post('/orders', orderData);
+      const { data } = await api.post('/orders', orderData);
       
       if (!data || !data.order || !data.order._id) {
         throw new Error('Invalid order response from server');

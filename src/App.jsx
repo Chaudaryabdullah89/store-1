@@ -8,6 +8,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './Context/AuthContext';
 import ShopContextProvider from './Context/shopcontext';
+import { ToastContainer } from 'react-toastify';
 
 // Components
 import Footer from './Components/Fotter';
@@ -108,6 +109,7 @@ function App() {
                 <Route path="/place-order" element={<PlaceOrder />} />
                 <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
                 <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminProducts /></ProtectedRoute>} />

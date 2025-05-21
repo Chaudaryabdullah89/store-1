@@ -115,7 +115,7 @@ const PlaceOrder = () => {
     try {
       // Prepare order data
       const orderData = {
-        orderItems: cartData.map(item => ({
+        items: cartData.map(item => ({
           product: item._id,
           quantity: item.quantity,
           size: item.size || 'default',
@@ -129,10 +129,9 @@ const PlaceOrder = () => {
           country: formData.country
         },
         paymentMethod: formData.paymentMethod,
-        itemsPrice: parseFloat(orderSummary.subtotal.toFixed(2)),
+        totalAmount: parseFloat(orderSummary.total.toFixed(2)),
+        shippingCost: parseFloat(orderSummary.shipping.toFixed(2)),
         taxPrice: parseFloat(orderSummary.tax.toFixed(2)),
-        shippingPrice: parseFloat(orderSummary.shipping.toFixed(2)),
-        totalPrice: parseFloat(orderSummary.total.toFixed(2)),
         customerName: `${formData.firstName} ${formData.lastName}`,
         customerEmail: formData.email
       };

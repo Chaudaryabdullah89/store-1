@@ -94,28 +94,20 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(user));
       
       // Set auth state
-      setAuth({
-        token,
-        user,
-        isAuthenticated: true,
-        isLoading: false
-      });
+      setToken(token);
+      setUser(user);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       // Handle navigation based on user role
       if (user.role === 'admin') {
-        navigate('/admin/dashboard', { replace: true });
+        navigate('/admin/dashboard');
       } else {
         navigate('/');
       }
 
-      return true;
+      return user;
     } catch (error) {
       console.error('Login error:', error);
-      setAuth(prev => ({
-        ...prev,
-        isAuthenticated: false,
-        isLoading: false
-      }));
       throw error;
     }
   };

@@ -30,28 +30,22 @@ const AdminLogin = () => {
       console.log('Starting admin login process...');
       console.log('Login attempt with email:', formData.email);
       
-      const success = await login(formData.email, formData.password);
-      console.log('Login response:', success);
+      const user = await login(formData.email, formData.password);
+      console.log('Login response:', user);
       
-      if (success) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        console.log('User data:', user);
-        
-        if (user && user.role === 'admin') {
-          toast.success('Login successful!');
-          // Navigation will be handled by AuthContext
-        } else {
-          // Clear auth data and show error
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          throw new Error('Access denied. Admin privileges required.');
-        }
+      if (user && user.role === 'admin') {
+        toast.success('Login successful!');
+        navigate('/admin/dashboard');
+      } else {
+        // Clear auth data and show error
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        throw new Error('Access denied. Admin privileges required.');
       }
     } catch (error) {
       console.error('Login error details:', {
         message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
+        response: error.response?.data
       });
       toast.error(error.message || 'Login failed. Please check your credentials.');
       

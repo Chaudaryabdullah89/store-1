@@ -21,7 +21,10 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/auth/login', formData);
+      const response = await api.post('/api/auth/login', {
+        email: formData.email,
+        password: formData.password
+      });
       const { token, user } = response.data;
 
       if (token && user) {

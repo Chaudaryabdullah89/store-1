@@ -53,7 +53,7 @@ const AdminBlogs = () => {
         sortOrder: 'desc'
       });
 
-      const response = await api.get('/blogs', {
+      const response = await api.get('/api/blogs', {
         params: {
           page: currentPage,
           limit: 10,
@@ -96,7 +96,7 @@ const AdminBlogs = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/blogs/${id}`);
+      await api.delete(`/api/blogs/${id}`);
       toast.success('Blog deleted successfully');
       fetchBlogs();
       setDeleteModal({ isOpen: false, blogId: null, blogTitle: '' });
@@ -110,7 +110,7 @@ const AdminBlogs = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await api.put(`/blogs/${id}`, { status: newStatus });
+      await api.put(`/api/blogs/${id}`, { status: newStatus });
       toast.success(`Blog ${newStatus} successfully`);
       fetchBlogs();
     } catch (err) {

@@ -49,7 +49,7 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/admin/orders');
+      const response = await api.get('/api/admin/orders');
       setOrders(response.data.orders);
       calculateStats(response.data.orders);
     } catch (error) {
@@ -165,7 +165,7 @@ const AdminOrders = () => {
 
     try {
       setIsUpdating(true);
-      const response = await api.put(`/orders/${orderToDismiss}/dismiss`);
+      const response = await api.put(`/api/orders/${orderToDismiss}/dismiss`);
       
       if (response.data) {
         toast.success('Order has been dismissed');
@@ -192,7 +192,7 @@ const AdminOrders = () => {
 
     try {
       setIsUpdating(true);
-      const response = await api.put(`/orders/${orderId}/status`, { 
+      const response = await api.put(`/api/orders/${orderId}/status`, { 
         status: newStatus,
         statusNote: note,
         statusHistory: {

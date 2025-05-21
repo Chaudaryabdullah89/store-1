@@ -12,7 +12,7 @@ const RequestReset = () => {
     setIsLoading(true);
 
     try {
-      await api.post('/users/request-reset', { email });
+      await api.post('/api/users/request-reset', { email });
       toast.success('Password reset email sent. Please check your inbox.');
       setEmail('');
     } catch (error) {

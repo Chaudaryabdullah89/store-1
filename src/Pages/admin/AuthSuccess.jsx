@@ -31,7 +31,7 @@ const AuthSuccess = () => {
         localStorage.setItem('token', token);
 
         // Get user data using the token
-        const response = await api.get('/users/me', {
+        const response = await api.get('/api/users/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }

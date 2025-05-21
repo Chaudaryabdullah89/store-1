@@ -43,9 +43,9 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const [ordersResponse, productsResponse, customersResponse] = await Promise.all([
-        api.get('/orders'),
-        api.get('/products'),
-        api.get('/users')
+        api.get('/api/orders'),
+        api.get('/api/products'),
+        api.get('/api/users')
       ]).catch(error => {
         console.error('API Error:', {
           status: error.response?.status,

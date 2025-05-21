@@ -40,7 +40,7 @@ const AdminSettings = () => {
   const fetchSettings = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/admin/settings');
+      const response = await api.get('/api/admin/settings');
       setSettings(response.data);
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -74,7 +74,7 @@ const AdminSettings = () => {
     e.preventDefault();
     try {
       setSaving(true);
-      await api.put('/admin/settings', settings);
+      await api.put('/api/admin/settings', settings);
       toast.success('Settings updated successfully');
     } catch (error) {
       console.error('Error updating settings:', error);

@@ -28,7 +28,7 @@ const EditProduct = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await api.get(`/products/${id}`);
+      const response = await api.get(`/api/products/${id}`);
       const product = response.data;
       setFormData({
         name: product.name,
@@ -106,7 +106,7 @@ const EditProduct = () => {
         }
       });
 
-      await api.put(`/products/${id}`, productData, {
+      await api.put(`/api/products/${id}`, productData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

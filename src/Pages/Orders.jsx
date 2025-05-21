@@ -35,8 +35,8 @@ const Orders = () => {
         throw new Error('No authentication token found');
       }
 
-      console.log('Making request to /orders/my-orders');
-      const response = await api.get('/orders/my-orders', {
+      console.log('Making request to /api/orders/my-orders');
+      const response = await api.get('/api/orders/my-orders', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -135,7 +135,7 @@ const AddProduct = () => {
       const imageFormData = new FormData();
       imageFormData.append('image', imageFile);
 
-      const uploadResponse = await api.post('/upload', imageFormData, {
+      const uploadResponse = await api.post('/api/upload', imageFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -167,7 +167,7 @@ const AddProduct = () => {
         seo: formData.seo
       };
 
-      await api.post('/products', productData);
+      await api.post('/api/products', productData);
 
       toast.success('Product added successfully');
       navigate('/admin/products');

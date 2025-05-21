@@ -22,7 +22,7 @@ const AdminCustomers = () => {
   const fetchCustomers = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/users');
+      const response = await api.get('/api/users');
       const customersData = Array.isArray(response.data) ? response.data : [];
       
       // Add default values for missing properties
@@ -98,7 +98,7 @@ const AdminCustomers = () => {
   const handleDeleteCustomer = async (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        await api.delete(`/users/${customerId}`);
+        await api.delete(`/api/users/${customerId}`);
         toast.success('Customer deleted successfully');
         fetchCustomers();
       } catch (error) {

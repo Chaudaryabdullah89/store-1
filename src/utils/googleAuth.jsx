@@ -41,7 +41,7 @@ export const GoogleAuthButton = ({ disabled }) => {
       console.log('Google user info:', userInfo);
 
       // Send to backend
-      const authResponse = await api.post('/auth/google', {
+      const authResponse = await api.post('/api/auth/google', {
         access_token: response.access_token,
         user_info: userInfo
       });

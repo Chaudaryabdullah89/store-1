@@ -39,7 +39,7 @@ const Profile = () => {
       setError(null);
       console.log('Fetching user blogs for user:', user?._id);
       
-      const response = await api.get('/blogs/user');
+      const response = await api.get('/api/blogs/user');
       console.log('User blogs response:', response.data);
       
       if (Array.isArray(response.data)) {
@@ -82,7 +82,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get('/users/profile');
+      const response = await api.get('/api/users/profile');
       const userData = response.data;
       
       // Construct full avatar URL if it exists
@@ -121,7 +121,7 @@ const Profile = () => {
 
   const fetchUserOrders = async () => {
     try {
-      const response = await api.get('/orders/my-orders');
+      const response = await api.get('/api/orders/my-orders');
       if (response.data && Array.isArray(response.data)) {
         const sortedOrders = response.data
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -190,7 +190,7 @@ const Profile = () => {
       }
 
       // Make the API call
-      const response = await api.put('/users/profile', updateData);
+      const response = await api.put('/api/users/profile', updateData);
       
       if (response.data) {
         // Update the userData state with the new data
@@ -256,7 +256,7 @@ const Profile = () => {
       formData.append('avatar', file);
 
       try {
-        const response = await api.post('/users/avatar', formData, {
+        const response = await api.post('/api/users/avatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

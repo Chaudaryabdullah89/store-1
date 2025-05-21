@@ -29,7 +29,7 @@ const OrderConfirmation = () => {
           return;
         }
 
-        const response = await api.get(`/orders/${orderId}`, {
+        const response = await api.get(`/api/orders/${orderId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

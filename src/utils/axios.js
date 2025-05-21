@@ -1,13 +1,12 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://apna-backend.vercel.app';
-
-const instance = axios.create({
-  baseURL: API_URL,
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'https://apna-backend.vercel.app/api',
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
   }
 });
 
@@ -26,7 +25,7 @@ const processQueue = (error, token = null) => {
 };
 
 // Request interceptor
-instance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     console.log('Making request:', {
       url: config.url,
@@ -55,7 +54,7 @@ instance.interceptors.request.use(
 );
 
 // Response interceptor
-instance.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     console.log('Response received:', {
       status: response.status,
@@ -96,4 +95,4 @@ instance.interceptors.response.use(
   }
 );
 
-export default instance; 
+export default api; 

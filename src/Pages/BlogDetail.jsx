@@ -139,7 +139,7 @@ const BlogDetail = () => {
         </div>
         {blog.featuredImage && (
           <img
-            src={blog.featuredImage.startsWith('http') ? blog.featuredImage : `http://localhost:5000${blog.featuredImage}`}
+            src={blog.featuredImage.startsWith('http') ? blog.featuredImage : `https://apna-backend.vercel.app${blog.featuredImage}`}
             alt={blog.title}
             className="w-full h-96 object-cover rounded-lg mb-8"
             onError={(e) => {

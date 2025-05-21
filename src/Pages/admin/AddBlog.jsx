@@ -53,7 +53,7 @@ const AddBlog = () => {
       });
       
       if (blog.featuredImage) {
-        setPreviewImage(`http://localhost:5000${blog.featuredImage}`);
+        setPreviewImage(`https://apna-backend.vercel.app${blog.featuredImage}`);
       }
     } catch (err) {
       console.error('Error fetching blog:', err);

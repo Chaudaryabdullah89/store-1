@@ -169,7 +169,7 @@ const BlogList = () => {
           <div key={blog._id} className="bg-white rounded-lg shadow-lg overflow-hidden">
             {blog.featuredImage && (
               <img
-                src={`http://localhost:5000${blog.featuredImage}`}
+                src={`https://apna-backend.vercel.app${blog.featuredImage}`}
                 alt={blog.title}
                 className="w-full h-48 object-cover"
               />

@@ -87,7 +87,7 @@ const Profile = () => {
       
       // Construct full avatar URL if it exists
       if (userData.avatar) {
-        userData.avatar = `http://localhost:5000${userData.avatar}`;
+        userData.avatar = `https://apna-backend.vercel.app${userData.avatar}`;
       }
       
       setUserData(userData);
@@ -263,8 +263,7 @@ const Profile = () => {
         });
 
         if (response.data.avatarUrl) {
-          // Construct the full URL for the avatar
-          const fullAvatarUrl = `http://localhost:5000${response.data.avatarUrl}`;
+          const fullAvatarUrl = `https://apna-backend.vercel.app${response.data.avatarUrl}`;
           setUserData(prev => ({
             ...prev,
             avatar: fullAvatarUrl

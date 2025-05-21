@@ -39,20 +39,18 @@ export const ShopContextProvider = (props) => {
       
       // Ensure image URLs are properly formatted
       const formattedProducts = response.data.map(product => {
-        let imageUrl;
+        let imageUrl = '';
         
-        if (product.image) {
-          if (typeof product.image === 'string') {
-            if (product.image.startsWith('http')) {
-              imageUrl = product.image;
-            } else if (product.image.startsWith('/')) {
-              imageUrl = `http://localhost:5000${product.image}`;
-            } else {
-              imageUrl = `http://localhost:5000/uploads/${product.image}`;
-            }
-          } else if (typeof product.image === 'object') {
-            imageUrl = product.image.url || product.image.path;
+        if (typeof product.image === 'string') {
+          if (product.image.startsWith('http')) {
+            imageUrl = product.image;
+          } else if (product.image.startsWith('/')) {
+            imageUrl = `https://apna-backend.vercel.app${product.image}`;
+          } else {
+            imageUrl = `https://apna-backend.vercel.app/uploads/${product.image}`;
           }
+        } else if (typeof product.image === 'object') {
+          imageUrl = product.image.url || product.image.path;
         }
         
         if (!imageUrl || imageUrl.length < 5) {

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+const instance = axios.create({
+  baseURL: 'https://apna-backend.vercel.app/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ const processQueue = (error, token = null) => {
 };
 
 // Request interceptor
-api.interceptors.request.use(
+instance.interceptors.request.use(
   (config) => {
     console.log('Making request:', {
       url: config.url,
@@ -53,7 +53,7 @@ api.interceptors.request.use(
 );
 
 // Response interceptor
-api.interceptors.response.use(
+instance.interceptors.response.use(
   (response) => {
     console.log('Response received:', {
       status: response.status,
@@ -94,4 +94,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default instance; 

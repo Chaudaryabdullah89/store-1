@@ -62,10 +62,9 @@ export default defineConfig(({ command }) => ({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://apna-backend.vercel.app',
         changeOrigin: true,
-        secure: false,
-        ws: true
+        secure: true,
       },
       '/google-api': {
         target: 'https://www.googleapis.com',

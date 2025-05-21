@@ -239,7 +239,7 @@ const AdminBlogs = () => {
                     <div className="flex items-center">
                       {blog.featuredImage && (
                         <img
-                          src={`http://localhost:5000${blog.featuredImage}`}
+                          src={`https://apna-backend.vercel.app${blog.featuredImage}`}
                           alt={blog.title}
                           className="h-10 w-10 rounded-lg object-cover mr-3"
                         />

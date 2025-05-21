@@ -32,11 +32,7 @@ const OrderConfirmation = () => {
         console.log('Fetching order with ID:', orderId);
         console.log('Using token:', token ? 'Present' : 'Missing');
 
-        const response = await api.get(`/api/orders/${orderId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await api.get(`/api/orders/${orderId}`);
         
         console.log('Order response:', response.data);
         

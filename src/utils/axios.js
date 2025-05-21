@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://apna-backend.vercel.app/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://apna-backend.vercel.app';
 
 const instance = axios.create({
   baseURL: API_URL,

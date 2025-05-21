@@ -98,13 +98,6 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      // Handle navigation based on user role
-      if (user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/');
-      }
-
       return user;
     } catch (error) {
       console.error('Login error:', error);

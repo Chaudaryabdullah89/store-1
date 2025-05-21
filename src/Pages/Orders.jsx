@@ -36,11 +36,7 @@ const Orders = () => {
       }
 
       console.log('Making request to /api/orders/my-orders');
-      const response = await api.get('/api/orders/my-orders', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await api.get('/api/orders/my-orders');
       
       console.log('Orders response:', response.data);
       

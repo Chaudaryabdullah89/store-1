@@ -127,10 +127,20 @@ const Profile = () => {
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 5);
         setOrders(sortedOrders);
+      } else {
+        console.error('Invalid response format:', response.data);
+        setOrders([]);
+        toast.error('Failed to fetch recent orders');
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
-      toast.error('Failed to fetch recent orders');
+      if (error.response?.status === 401) {
+        toast.error('Please login to view your orders');
+        navigate('/login');
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to fetch recent orders');
+      }
+      setOrders([]);
     }
   };
 

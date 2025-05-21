@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../utils/axios';
 import { toast } from 'react-toastify';
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 const OrderConfirmation = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,26 +16,29 @@ const OrderConfirmation = () => {
     const fetchOrder = async () => {
       try {
         setIsLoading(true);
-        const token = localStorage.getItem('token');
-        
-        if (!token) {
-          toast.error('Please login to view order details');
-          navigate('/login');
-          return;
-        }
+        setError(null);
 
-        if (!orderId || orderId === 'undefined') {
+        // Check if orderId is valid
+        if (!orderId || orderId === 'undefined' || orderId === 'null') {
           setError('Invalid order ID');
           setIsLoading(false);
           return;
         }
 
-        console.log('Fetching order with ID:', orderId);
-        console.log('Using token:', token ? 'Present' : 'Missing');
+        // Try to get order ID from different sources
+        const finalOrderId = orderId || 
+                           location.state?.orderId || 
+                           localStorage.getItem('lastOrderId');
 
-        const response = await api.get(`/api/orders/${orderId}`);
-        
-        console.log('Order response:', response.data);
+        if (!finalOrderId) {
+          setError('Order ID not found');
+          setIsLoading(false);
+          return;
+        }
+
+        console.log('Fetching order with ID:', finalOrderId);
+
+        const response = await api.get(`/api/orders/${finalOrderId}`);
         
         if (response.data) {
           setOrder(response.data);
@@ -44,12 +48,6 @@ const OrderConfirmation = () => {
         }
       } catch (err) {
         console.error('Error fetching order:', err);
-        console.error('Error details:', {
-          message: err.message,
-          response: err.response?.data,
-          status: err.response?.status,
-          headers: err.response?.headers
-        });
         
         if (err.response?.status === 401) {
           toast.error('Please login to view order details');
@@ -58,7 +56,6 @@ const OrderConfirmation = () => {
           setError('Order not found');
         } else if (err.response?.status === 400) {
           setError('Invalid order ID format');
-          toast.error('Invalid order ID format');
         } else {
           setError('Failed to fetch order details');
           toast.error(err.response?.data?.message || 'Failed to fetch order details');
@@ -69,7 +66,7 @@ const OrderConfirmation = () => {
     };
 
     fetchOrder();
-  }, [orderId, navigate]);
+  }, [orderId, navigate, location]);
 
   if (isLoading) {
     return (
@@ -197,7 +194,7 @@ const OrderConfirmation = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>${(order.totalAmount || 0).toFixed(2)}</span>
+                  <span>${(order.itemsPrice || 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
@@ -209,7 +206,7 @@ const OrderConfirmation = () => {
                 </div>
                 <div className="flex justify-between font-semibold pt-2 border-t">
                   <span>Total</span>
-                  <span>${(order.totalAmount || 0).toFixed(2)}</span>
+                  <span>${(order.totalPrice || 0).toFixed(2)}</span>
                 </div>
               </div>
             </div>

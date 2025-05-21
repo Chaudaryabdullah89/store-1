@@ -29,11 +29,16 @@ const OrderConfirmation = () => {
           return;
         }
 
+        console.log('Fetching order with ID:', orderId);
+        console.log('Using token:', token ? 'Present' : 'Missing');
+
         const response = await api.get(`/api/orders/${orderId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
+        
+        console.log('Order response:', response.data);
         
         if (response.data) {
           setOrder(response.data);
@@ -43,14 +48,24 @@ const OrderConfirmation = () => {
         }
       } catch (err) {
         console.error('Error fetching order:', err);
+        console.error('Error details:', {
+          message: err.message,
+          response: err.response?.data,
+          status: err.response?.status,
+          headers: err.response?.headers
+        });
+        
         if (err.response?.status === 401) {
           toast.error('Please login to view order details');
           navigate('/login');
         } else if (err.response?.status === 404) {
           setError('Order not found');
+        } else if (err.response?.status === 400) {
+          setError('Invalid order ID format');
+          toast.error('Invalid order ID format');
         } else {
           setError('Failed to fetch order details');
-          toast.error('Failed to fetch order details');
+          toast.error(err.response?.data?.message || 'Failed to fetch order details');
         }
       } finally {
         setIsLoading(false);

@@ -39,12 +39,12 @@ export const AuthProvider = ({ children }) => {
         
         // Verify token and get fresh user data
         try {
-          const response = await api.get('/users/me');
+          const response = await api.get('/api/users/me');
           if (response.data) {
             // Update with fresh user data
             setUser(response.data);
             localStorage.setItem('user', JSON.stringify(response.data));
-          } else {
+          } else {2
             throw new Error('No user data received');
           }
         } catch (error) {
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async (tokenToVerify) => {
     try {
-      const response = await api.get('/users/me');
+      const response = await api.get('/api/users/me');
       if (response.data) {
         setUser(response.data);
         localStorage.setItem('user', JSON.stringify(response.data));

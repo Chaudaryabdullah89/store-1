@@ -98,6 +98,13 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
+      // If user is admin, redirect to admin dashboard
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
+
       return user;
     } catch (error) {
       console.error('Login error:', error);
@@ -151,7 +158,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAdmin = () => {
-    return user?.role === 'admin';
+    if (!user) return false;
+    return user.role === 'admin';
   };
 
   const value = {

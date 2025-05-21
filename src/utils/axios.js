@@ -5,10 +5,7 @@ const instance = axios.create({
   baseURL: 'https://apna-backend.vercel.app/api',
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    'Content-Type': 'application/json'
   }
 });
 

@@ -28,6 +28,11 @@ const Login = () => {
       const { token, user } = response.data;
 
       if (token && user) {
+        if (user.role === 'admin') {
+          toast.error('Admins must log in from /admin/login');
+          setIsLoading(false);
+          return;
+        }
         await login(formData.email, formData.password);
         toast.success('Login successful!');
         

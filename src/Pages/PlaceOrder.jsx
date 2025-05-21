@@ -189,16 +189,17 @@ const PlaceOrder = () => {
         orderData.paymentIntentId = confirmedIntent.id;
       }
 
-      // Create the order
-      const { data } = await api.post('/api/orders', orderData);
+      // Create order
+      const orderResponse = await api.post('/api/orders', orderData);
+      console.log('Order creation response:', orderResponse.data);
       
-      if (!data || !data.order || !data.order._id) {
+      if (!orderResponse.data || !orderResponse.data._id) {
         throw new Error('Invalid order response from server');
       }
-      
-      const newOrderId = data.order._id;
-      setOrderId(newOrderId);
-      console.log('Order created with ID:', newOrderId);
+
+      orderId = orderResponse.data._id;
+      setOrderId(orderId);
+      console.log('Order created with ID:', orderId);
 
       // Clear cart after successful order
       localStorage.removeItem('cart');
@@ -212,11 +213,11 @@ const PlaceOrder = () => {
         setShowLoginPrompt(true);
       } else {
         // For logged-in users, navigate to order confirmation
-        navigate(`/order/${newOrderId}`);
+        navigate(`/order/${orderId}`);
       }
       
       // Store order ID in localStorage for later use
-      localStorage.setItem('lastOrderId', newOrderId);
+      localStorage.setItem('lastOrderId', orderId);
     } catch (error) {
       console.error('Error processing order:', error);
       console.log('Server response:', error.response?.data);

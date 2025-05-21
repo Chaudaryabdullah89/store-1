@@ -49,12 +49,24 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/api/admin/orders');
-      setOrders(response.data.orders);
-      calculateStats(response.data.orders);
+      console.log('Fetching orders...');
+      const response = await api.get('/api/orders');
+      console.log('Orders response:', response.data);
+      
+      if (!response.data || !Array.isArray(response.data)) {
+        console.error('Invalid response format:', response.data);
+        throw new Error('Invalid response format from server');
+      }
+      
+      setOrders(response.data);
+      calculateStats(response.data);
     } catch (error) {
-      console.error('Error fetching orders:', error);
-      toast.error('Failed to fetch orders');
+      console.error('Error fetching orders:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      toast.error(error.response?.data?.message || 'Failed to fetch orders');
     } finally {
       setIsLoading(false);
     }

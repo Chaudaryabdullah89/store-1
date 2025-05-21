@@ -154,7 +154,7 @@ const PlaceOrder = () => {
 
       if (formData.paymentMethod === 'card') {
         // Create payment intent
-        const { data: paymentIntent } = await api.post('/payments/create-intent', {
+        const { data: paymentIntent } = await api.post('/api/payments/create-intent', {
           amount: Math.round(orderSummary.total * 100), // Convert to cents
           currency: 'usd'
         });
@@ -190,7 +190,7 @@ const PlaceOrder = () => {
       }
 
       // Create the order
-      const { data } = await api.post('/orders', orderData);
+      const { data } = await api.post('/api/orders', orderData);
       
       if (!data || !data.order || !data.order._id) {
         throw new Error('Invalid order response from server');

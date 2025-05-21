@@ -12,6 +12,17 @@ const Checkout = () => {
     const [discountCode, setDiscountCode] = useState('');
     const [appliedDiscount, setAppliedDiscount] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+        phone: ''
+    });
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
 
     useEffect(() => {
         fetchShippingMethods();
@@ -81,24 +92,57 @@ const Checkout = () => {
             return;
         }
 
+        if (!formData.name || !formData.email || !formData.address || !formData.city || !formData.state || !formData.zipCode) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
         setLoading(true);
         try {
             const orderData = {
-                items: cart.items,
+                items: cart.items.map(item => ({
+                    product: item.product._id,
+                    quantity: item.quantity,
+                    price: item.product.price
+                })),
+                shippingAddress: {
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    street: formData.address,
+                    city: formData.city,
+                    state: formData.state,
+                    zipCode: formData.zipCode,
+                    country: formData.country || 'United States'
+                },
                 shippingMethod: selectedShipping._id,
                 discountCode: appliedDiscount?.discount?._id,
                 subtotal: calculateSubtotal(),
                 shippingCost: calculateShipping(),
                 discountAmount: calculateDiscount(),
-                total: calculateTotal()
+                totalAmount: calculateTotal(),
+                paymentMethod: selectedPaymentMethod,
+                customerName: formData.name,
+                customerEmail: formData.email
             };
 
             const response = await axios.post('/api/orders', orderData);
-            toast.success('Order placed successfully');
-            navigate(`/order-confirmation/${response.data._id}`);
+
+            if (selectedPaymentMethod === 'card') {
+                // Handle card payment
+                const { clientSecret, orderId } = response.data;
+                // Redirect to payment confirmation page
+                navigate(`/payment-confirmation/${orderId}`, { 
+                    state: { clientSecret, orderId }
+                });
+            } else {
+                // Handle cash on delivery
+                toast.success('Order placed successfully!');
+                navigate(`/order-confirmation/${response.data.orderId}`);
+            }
         } catch (err) {
             console.error('Error placing order:', err);
-            toast.error('Failed to place order');
+            toast.error(err.response?.data?.message || 'Failed to place order. Please try again.');
         } finally {
             setLoading(false);
         }

@@ -41,6 +41,7 @@ import BlogList from './Pages/BlogList';
 import BlogDetail from './Pages/BlogDetail';
 import WriteBlog from './Pages/WriteBlog';
 import OrderDetails from './Pages/admin/OrderDetails';
+import PaymentConfirmation from './Pages/PaymentConfirmation';
  
 // Admin Pages
 import AdminDashboard from './Pages/admin/AdminDashboard';
@@ -130,6 +131,7 @@ function App() {
                 <Route path="/write-blog" element={<WriteBlog />} />
                 <Route path="/forgot-password" element={<RequestReset />} />
                 <Route path="/admin/orders/:orderId" element={<OrderDetails />} />
+                <Route path="/payment-confirmation/:orderId" element={<PaymentConfirmation />} />
                 {/* <Route path="/legal/privacy" element={<PrivacyPolicy />} />
                 <Route path="/legal/terms" element={<TermsConditions />} />
                 <Route path="/legal/shipping" element={<ShippingPolicy />} />

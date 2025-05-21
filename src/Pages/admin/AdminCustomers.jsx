@@ -3,6 +3,7 @@ import AdminLayout from '../../Components/AdminLayout';
 import api from '../../utils/axios';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { FiMail, FiSend, FiX } from 'react-icons/fi';
 
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState([]);
@@ -14,6 +15,12 @@ const AdminCustomers = () => {
     direction: 'asc',
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailData, setEmailData] = useState({
+    subject: '',
+    message: '',
+    template: 'custom'
+  });
 
   useEffect(() => {
     fetchCustomers();
@@ -22,26 +29,11 @@ const AdminCustomers = () => {
   const fetchCustomers = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/api/users');
-      const customersData = Array.isArray(response.data) ? response.data : [];
-      
-      // Add default values for missing properties
-      const processedCustomers = customersData.map(customer => ({
-        ...customer,
-        orderCount: customer.orderCount || 0,
-        totalSpent: customer.totalSpent || 0,
-        lastOrder: customer.lastOrder || new Date().toISOString(),
-        name: customer.name || 'N/A',
-        email: customer.email || 'N/A'
-      }));
-      
-      setCustomers(processedCustomers);
-      setFilteredCustomers(processedCustomers);
+      const response = await api.get('/api/admin/users');
+      setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
       toast.error('Failed to fetch customers');
-      setCustomers([]);
-      setFilteredCustomers([]);
     } finally {
       setIsLoading(false);
     }
@@ -108,6 +100,24 @@ const AdminCustomers = () => {
     }
   };
 
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/api/admin/send-email', {
+        to: selectedCustomer.email,
+        subject: emailData.subject,
+        message: emailData.message,
+        template: emailData.template
+      });
+      toast.success('Email sent successfully');
+      setShowEmailModal(false);
+      setEmailData({ subject: '', message: '', template: 'custom' });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error('Failed to send email');
+    }
+  };
+
   const CustomerDetails = ({ customer }) => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -144,6 +154,63 @@ const AdminCustomers = () => {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+
+  const EmailModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Send Email to {selectedCustomer?.name}</h2>
+          <button
+            onClick={() => setShowEmailModal(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FiX size={24} />
+          </button>
+        </div>
+        <form onSubmit={handleSendEmail} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Subject
+            </label>
+            <input
+              type="text"
+              value={emailData.subject}
+              onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Message
+            </label>
+            <textarea
+              value={emailData.message}
+              onChange={(e) => setEmailData({ ...emailData, message: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-40"
+              required
+            />
+          </div>
+          <div className="flex justify-end space-x-3">
+            <button
+              type="button"
+              onClick={() => setShowEmailModal(false)}
+              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center"
+            >
+              <FiSend className="mr-2" />
+              Send Email
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
@@ -247,10 +314,14 @@ const AdminCustomers = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <button
-                        onClick={() => setSelectedCustomer(customer)}
-                        className="text-gray-600 hover:text-gray-900"
+                        onClick={() => {
+                          setSelectedCustomer(customer);
+                          setShowEmailModal(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-900 flex items-center"
                       >
-                        View Details
+                        <FiMail className="mr-1" />
+                        Send Email
                       </button>
                       <button
                         onClick={() => handleDeleteCustomer(customer._id)}
@@ -275,6 +346,7 @@ const AdminCustomers = () => {
       </div>
 
       {selectedCustomer && <CustomerDetails customer={selectedCustomer} />}
+      {showEmailModal && <EmailModal />}
     </AdminLayout>
   );
 };

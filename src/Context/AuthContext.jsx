@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Regular login flow
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/api/auth/login', { email, password });
       console.log('Login response:', response.data);
       
       if (response.data.token) {
@@ -165,7 +165,7 @@ export const AuthProvider = ({ children }) => {
       
       console.log('Attempting registration:', { name, email });
       
-      const response = await api.post('/auth/register', { name, email, password });
+      const response = await api.post('/api/auth/register', { name, email, password });
       
       console.log('Registration response:', response.data);
       

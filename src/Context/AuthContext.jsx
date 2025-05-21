@@ -86,69 +86,37 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // Check if user is already logged in
-      if (user && token) {
-        console.log('User is already logged in');
-        return true;
-      }
-
-      setLoading(true);
-      setError(null);
-      
-      console.log('Attempting login for:', email);
-
-      // Check if this is a Google login (password is actually the access token)
-      if (password.length > 100) { // Google access tokens are typically longer
-        console.log('Processing Google login');
-        // For Google login, we already have the token and user data from the backend
-        // Just need to set them in the context and localStorage
-        setToken(password); // password is actually the token
-        setUser(JSON.parse(localStorage.getItem('user')));
-        api.defaults.headers.common['Authorization'] = `Bearer ${password}`;
-        
-        // Navigate based on user role
-        const userData = JSON.parse(localStorage.getItem('user'));
-        if (userData.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/');
-        }
-        
-        setLoading(false);
-        return true;
-      }
-
-      // Regular login flow
       const response = await api.post('/api/auth/login', { email, password });
-      console.log('Login response:', response.data);
+      const { token, user } = response.data;
       
-      if (response.data.token) {
-        const { token: newToken, user: userData } = response.data;
-        setToken(newToken);
-        setUser(userData);
-        localStorage.setItem('token', newToken);
-        localStorage.setItem('user', JSON.stringify(userData));
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-        
-        // Navigate based on user role
-        if (userData.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/');
-        }
-        
-        setLoading(false);
-        return true;
+      // Store auth data
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Set auth state
+      setAuth({
+        token,
+        user,
+        isAuthenticated: true,
+        isLoading: false
+      });
+
+      // Handle navigation based on user role
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/');
       }
-      
-      throw new Error('Invalid response from server');
+
+      return true;
     } catch (error) {
       console.error('Login error:', error);
-      setLoading(false);
-      
-      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      setAuth(prev => ({
+        ...prev,
+        isAuthenticated: false,
+        isLoading: false
+      }));
+      throw error;
     }
   };
 

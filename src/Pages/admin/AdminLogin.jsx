@@ -38,12 +38,8 @@ const AdminLogin = () => {
         console.log('User data:', user);
         
         if (user && user.role === 'admin') {
-          // Get the redirect path from location state or default to admin dashboard
-          const from = location.state?.from || '/admin/dashboard';
-          console.log('Login successful, redirecting to:', from);
-          
           toast.success('Login successful!');
-          navigate(from, { replace: true });
+          // Navigation will be handled by AuthContext
         } else {
           // Clear auth data and show error
           localStorage.removeItem('token');

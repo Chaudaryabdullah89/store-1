@@ -34,7 +34,7 @@ export const ShopContextProvider = (props) => {
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/products');
+      const response = await api.get('/api/products');
       console.log('Products response:', response.data);
       
       // Ensure image URLs are properly formatted

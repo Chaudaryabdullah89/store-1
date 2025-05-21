@@ -20,7 +20,7 @@ const Home = () => {
     const fetchAllProducts = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/products');
+        const response = await api.get('/api/products');
         console.log('Products response:', response.data);
         setProducts(response.data);
         setError(null);
@@ -35,7 +35,7 @@ const Home = () => {
 
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await api.get('/products', {
+        const response = await api.get('/api/products', {
           params: { featured: true }
         });
         console.log('Featured products response:', response.data);

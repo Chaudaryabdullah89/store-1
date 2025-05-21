@@ -33,7 +33,7 @@ const AdminProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products');
+      const response = await api.get('/api/products');
       const productsData = response.data;
       setProducts(productsData);
       
@@ -76,7 +76,7 @@ const AdminProducts = () => {
   const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await api.delete(`/products/${productId}`);
+        await api.delete(`/api/products/${productId}`);
         toast.success('Product deleted successfully');
         fetchProducts();
       } catch (error) {

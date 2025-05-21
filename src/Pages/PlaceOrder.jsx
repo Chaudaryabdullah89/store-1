@@ -117,7 +117,7 @@ const PlaceOrder = () => {
 
       // Prepare order data
       const orderData = {
-        orderItems: cartData.map(item => ({
+        items: cartData.map(item => ({
           product: item._id,
           quantity: item.quantity,
           size: item.size === "null" ? "default" : item.size,
@@ -131,73 +131,24 @@ const PlaceOrder = () => {
           country: formData.country
         },
         paymentMethod: formData.paymentMethod,
-        itemsPrice: parseFloat(orderSummary.subtotal.toFixed(2)),
+        totalAmount: parseFloat(orderSummary.total.toFixed(2)),
+        shippingCost: parseFloat(orderSummary.shipping.toFixed(2)),
         taxPrice: parseFloat(orderSummary.tax.toFixed(2)),
-        shippingPrice: parseFloat(orderSummary.shipping.toFixed(2)),
-        totalPrice: parseFloat(orderSummary.total.toFixed(2)),
         customerName: `${formData.firstName} ${formData.lastName}`,
-        customerEmail: formData.email,
-        userId: user?._id // Will be null for guest orders
+        customerEmail: formData.email
       };
 
-      // Validate order data
-      if (!orderData.orderItems || orderData.orderItems.length === 0) {
-        throw new Error('Order must contain at least one item');
-      }
-
-      if (!orderData.totalPrice || isNaN(orderData.totalPrice) || orderData.totalPrice <= 0) {
-        console.error('Invalid total price:', orderData.totalPrice);
-        throw new Error('Invalid total price');
-      }
-
-      console.log('Sending order data:', JSON.stringify(orderData, null, 2));
-
-      if (formData.paymentMethod === 'card') {
-        // Create payment intent
-        const { data: paymentIntent } = await api.post('/api/payments/create-intent', {
-          amount: Math.round(orderSummary.total * 100), // Convert to cents
-          currency: 'usd'
-        });
-
-        // Confirm the payment
-        const { error: stripeError, paymentIntent: confirmedIntent } = await stripe.confirmCardPayment(
-          paymentIntent.clientSecret,
-          {
-            payment_method: {
-              card: elements.getElement(CardElement),
-              billing_details: {
-                name: `${formData.firstName} ${formData.lastName}`,
-                email: formData.email,
-                phone: formData.phone,
-                address: {
-                  line1: formData.address,
-                  city: formData.city,
-                  state: formData.state,
-                  postal_code: formData.zipCode,
-                  country: formData.country
-                }
-              }
-            }
-          }
-        );
-
-        if (stripeError) {
-          throw new Error(stripeError.message);
-        }
-
-        // Add payment intent ID to order data
-        orderData.paymentIntentId = confirmedIntent.id;
-      }
+      console.log('Sending order data:', orderData);
 
       // Create order
-      const orderResponse = await api.post('/api/orders', orderData);
-      console.log('Order creation response:', orderResponse.data);
-      
-      if (!orderResponse.data || !orderResponse.data._id) {
-        throw new Error('Invalid order response from server');
+      const response = await api.post('/api/orders', orderData);
+      console.log('Order creation response:', response.data);
+
+      if (!response.data) {
+        throw new Error('No response data received from server');
       }
 
-      orderId = orderResponse.data._id;
+      orderId = response.data.orderId;
       setOrderId(orderId);
       console.log('Order created with ID:', orderId);
 
@@ -205,23 +156,39 @@ const PlaceOrder = () => {
       localStorage.removeItem('cart');
       localStorage.removeItem('checkoutData');
 
-      // Show success message
-      toast.success('Order placed successfully!');
-
-      // Only show login prompt for guest users
-      if (!user) {
-        setShowLoginPrompt(true);
+      if (formData.paymentMethod === 'card') {
+        // For card payments, redirect to payment confirmation
+        navigate(`/payment-confirmation/${orderId}`, {
+          state: { 
+            clientSecret: response.data.clientSecret,
+            orderId: orderId
+          }
+        });
       } else {
-        // For logged-in users, navigate to order confirmation
-        navigate(`/order/${orderId}`);
+        // For cash on delivery
+        toast.success('Order placed successfully!');
+        navigate(`/order-confirmation/${orderId}`);
       }
       
       // Store order ID in localStorage for later use
       localStorage.setItem('lastOrderId', orderId);
     } catch (error) {
       console.error('Error processing order:', error);
-      console.log('Server response:', error.response?.data);
-      toast.error(error.response?.data?.message || error.message || 'Failed to process order. Please try again.');
+      console.log('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+
+      let errorMessage = 'Failed to process order. Please try again.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     } finally {
       setIsProcessing(false);
     }

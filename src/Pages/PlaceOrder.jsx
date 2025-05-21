@@ -113,14 +113,12 @@ const PlaceOrder = () => {
     }
 
     try {
-      let orderId;
-
       // Prepare order data
       const orderData = {
-        items: cartData.map(item => ({
+        orderItems: cartData.map(item => ({
           product: item._id,
           quantity: item.quantity,
-          size: item.size === "null" ? "default" : item.size,
+          size: item.size || 'default',
           price: parseFloat(item.price.toFixed(2))
         })),
         shippingAddress: {
@@ -131,9 +129,10 @@ const PlaceOrder = () => {
           country: formData.country
         },
         paymentMethod: formData.paymentMethod,
-        totalAmount: parseFloat(orderSummary.total.toFixed(2)),
-        shippingCost: parseFloat(orderSummary.shipping.toFixed(2)),
+        itemsPrice: parseFloat(orderSummary.subtotal.toFixed(2)),
         taxPrice: parseFloat(orderSummary.tax.toFixed(2)),
+        shippingPrice: parseFloat(orderSummary.shipping.toFixed(2)),
+        totalPrice: parseFloat(orderSummary.total.toFixed(2)),
         customerName: `${formData.firstName} ${formData.lastName}`,
         customerEmail: formData.email
       };
@@ -148,7 +147,7 @@ const PlaceOrder = () => {
         throw new Error('No response data received from server');
       }
 
-      orderId = response.data.orderId;
+      const orderId = response.data.order._id;
       setOrderId(orderId);
       console.log('Order created with ID:', orderId);
 
@@ -182,7 +181,9 @@ const PlaceOrder = () => {
 
       let errorMessage = 'Failed to process order. Please try again.';
       
-      if (error.response?.data?.message) {
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;

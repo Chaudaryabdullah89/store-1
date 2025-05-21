@@ -29,7 +29,7 @@ const AdminCustomers = () => {
   const fetchCustomers = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/api/admin/users');
+      const response = await api.get('/api/users');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);

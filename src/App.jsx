@@ -52,6 +52,8 @@ import AdminCustomers from './Pages/admin/AdminCustomers';
 import AdminSettings from './Pages/admin/AdminSettings';
 import AdminBlogs from './Pages/admin/AdminBlogs';
 import AddBlog from './Pages/admin/AddBlog';
+import Discounts from './Pages/admin/Discounts';
+import ShippingMethods from './Pages/admin/ShippingMethods';
 
 // Customer Service Pages
 // import PrivacyPolicy from './Pages/customer-service/PrivacyPolicy';
@@ -124,6 +126,8 @@ function App() {
                   <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/discounts" element={<ProtectedRoute requireAdmin><AdminLayout><Discounts /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/shipping-methods" element={<ProtectedRoute requireAdmin><AdminLayout><ShippingMethods /></AdminLayout></ProtectedRoute>} />
                   <Route path="/product" element={<Product />}>
                     <Route path=':productId' element={<Product />} />
                   </Route>
@@ -181,6 +185,8 @@ function App() {
                   <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/discounts" element={<ProtectedRoute requireAdmin><AdminLayout><Discounts /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/shipping-methods" element={<ProtectedRoute requireAdmin><AdminLayout><ShippingMethods /></AdminLayout></ProtectedRoute>} />
                   <Route path="/product" element={<Product />}>
                     <Route path=':productId' element={<Product />} />
                   </Route>

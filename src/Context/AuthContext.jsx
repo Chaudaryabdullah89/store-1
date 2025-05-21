@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
 
   const initializeAuth = async () => {
     try {
-      const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
-      const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const storedToken = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
 
       if (storedToken && storedUser) {
         // Set initial state
@@ -43,12 +43,8 @@ export const AuthProvider = ({ children }) => {
           if (response.data) {
             // Update with fresh user data
             setUser(response.data);
-            if (localStorage.getItem('token')) {
-              localStorage.setItem('user', JSON.stringify(response.data));
-            } else {
-              sessionStorage.setItem('user', JSON.stringify(response.data));
-            }
-          } else {
+            localStorage.setItem('user', JSON.stringify(response.data));
+          } else {2
             throw new Error('No user data received');
           }
         } catch (error) {
@@ -69,11 +65,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.get('/api/users/me');
       if (response.data) {
         setUser(response.data);
-        if (localStorage.getItem('token')) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-        } else {
-          sessionStorage.setItem('user', JSON.stringify(response.data));
-        }
+        localStorage.setItem('user', JSON.stringify(response.data));
         return true;
       }
       return false;
@@ -87,38 +79,24 @@ export const AuthProvider = ({ children }) => {
   const clearAuth = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('user');
     setToken(null);
     setUser(null);
     delete api.defaults.headers.common['Authorization'];
   };
 
-  const login = async (email, password, rememberMe = false) => {
+  const login = async (email, password) => {
     try {
       const response = await api.post('/api/auth/login', { email, password });
       const { token, user } = response.data;
       
-      // Store auth data based on rememberMe preference
-      if (rememberMe) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
-      }
+      // Store auth data
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       
       // Set auth state
       setToken(token);
       setUser(user);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      // If user is admin, redirect to admin dashboard
-      if (user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/');
-      }
 
       return user;
     } catch (error) {
@@ -173,8 +151,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAdmin = () => {
-    if (!user) return false;
-    return user.role === 'admin';
+    return user?.role === 'admin';
   };
 
   const value = {

@@ -60,7 +60,9 @@ import AddBlog from './Pages/admin/AddBlog';
 // import ReturnPolicy from './Pages/customer-service/ReturnPolicy';
 
 // Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
+  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
+  : null;
 
 function App() {
   const location = useLocation();
@@ -87,62 +89,121 @@ function App() {
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <AuthProvider>
         <ShopContextProvider>
-          <Elements stripe={stripePromise}>
-            <Preloader />
-            <div className='max-w-[1280px] mx-auto'>
-              <Navbar />
-            </div>
-            <Search />
-            <AnimatePresence mode="wait">
-              <Routes location={location} key={location.pathname}>
-                <Route path='/' element={<Home />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/contact' element={<Contact />} />
-                <Route path='/product/:productid' element={<Product />} />
-                <Route path='/cart' element={<Cart />} />
-                <Route path='/placeorder' element={<PlaceOrder />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/register' element={<Register />} />
-                <Route path='/order' element={<Order />} />
-                <Route path='/collection' element={<Collection />} />
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/place-order" element={<PlaceOrder />} />
-                <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminLayout><AdminProducts /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/add-product" element={<ProtectedRoute requireAdmin><AdminLayout><AddProduct /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/edit-product/:id" element={<ProtectedRoute requireAdmin><AdminLayout><EditProduct /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/customers" element={<ProtectedRoute requireAdmin><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/blogs" element={<ProtectedRoute requireAdmin><AdminLayout><AdminBlogs /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
-                <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
-                <Route path="/product" element={<Product />}>
-                  <Route path=':productId' element={<Product />} />
-                </Route>
-                <Route path='/orders' element={<Orders />} />
-                <Route path="/order/:orderId" element={<OrderConfirmation />} />
-                <Route path="/request-reset" element={<RequestReset />} />
-                <Route path="/reset-password/:token" element={<ResetPassword />} />
-                <Route path="/auth-success" element={<AuthSuccess />} />
-                <Route path="/blog" element={<BlogList />} />
-                <Route path="/blog/:slug" element={<BlogDetail />} />
-                <Route path="/write-blog" element={<WriteBlog />} />
-                <Route path="/forgot-password" element={<RequestReset />} />
-                <Route path="/payment-confirmation/:orderId" element={<PaymentConfirmation />} />
-                {/* <Route path="/legal/privacy" element={<PrivacyPolicy />} />
-                <Route path="/legal/terms" element={<TermsConditions />} />
-                <Route path="/legal/shipping" element={<ShippingPolicy />} />
-                <Route path="/legal/returns" element={<ReturnPolicy />} /> */}
-                <Route path="*" element={<div className='text-center text-2xl'>404 Not Found</div>} />
-              </Routes>
-            </AnimatePresence>
-            <Footer />
-          </Elements>
+          {stripePromise ? (
+            <Elements stripe={stripePromise}>
+              <Preloader />
+              <div className='max-w-[1280px] mx-auto'>
+                <Navbar />
+              </div>
+              <Search />
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/about' element={<About />} />
+                  <Route path='/contact' element={<Contact />} />
+                  <Route path='/product/:productid' element={<Product />} />
+                  <Route path='/cart' element={<Cart />} />
+                  <Route path='/placeorder' element={<PlaceOrder />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/register' element={<Register />} />
+                  <Route path='/order' element={<Order />} />
+                  <Route path='/collection' element={<Collection />} />
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/place-order" element={<PlaceOrder />} />
+                  <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminLayout><AdminProducts /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/add-product" element={<ProtectedRoute requireAdmin><AdminLayout><AddProduct /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/edit-product/:id" element={<ProtectedRoute requireAdmin><AdminLayout><EditProduct /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/customers" element={<ProtectedRoute requireAdmin><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/blogs" element={<ProtectedRoute requireAdmin><AdminLayout><AdminBlogs /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/product" element={<Product />}>
+                    <Route path=':productId' element={<Product />} />
+                  </Route>
+                  <Route path='/orders' element={<Orders />} />
+                  <Route path="/order/:orderId" element={<OrderConfirmation />} />
+                  <Route path="/request-reset" element={<RequestReset />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
+                  <Route path="/auth-success" element={<AuthSuccess />} />
+                  <Route path="/blog" element={<BlogList />} />
+                  <Route path="/blog/:slug" element={<BlogDetail />} />
+                  <Route path="/write-blog" element={<WriteBlog />} />
+                  <Route path="/forgot-password" element={<RequestReset />} />
+                  <Route path="/payment-confirmation/:orderId" element={<PaymentConfirmation />} />
+                  {/* <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/legal/terms" element={<TermsConditions />} />
+                  <Route path="/legal/shipping" element={<ShippingPolicy />} />
+                  <Route path="/legal/returns" element={<ReturnPolicy />} /> */}
+                  <Route path="*" element={<div className='text-center text-2xl'>404 Not Found</div>} />
+                </Routes>
+              </AnimatePresence>
+              <Footer />
+            </Elements>
+          ) : (
+            <>
+              <Preloader />
+              <div className='max-w-[1280px] mx-auto'>
+                <Navbar />
+              </div>
+              <Search />
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/about' element={<About />} />
+                  <Route path='/contact' element={<Contact />} />
+                  <Route path='/product/:productid' element={<Product />} />
+                  <Route path='/cart' element={<Cart />} />
+                  <Route path='/placeorder' element={<PlaceOrder />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/register' element={<Register />} />
+                  <Route path='/order' element={<Order />} />
+                  <Route path='/collection' element={<Collection />} />
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/place-order" element={<PlaceOrder />} />
+                  <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminLayout><AdminProducts /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/add-product" element={<ProtectedRoute requireAdmin><AdminLayout><AddProduct /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/edit-product/:id" element={<ProtectedRoute requireAdmin><AdminLayout><EditProduct /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/customers" element={<ProtectedRoute requireAdmin><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/blogs" element={<ProtectedRoute requireAdmin><AdminLayout><AdminBlogs /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
+                  <Route path="/product" element={<Product />}>
+                    <Route path=':productId' element={<Product />} />
+                  </Route>
+                  <Route path='/orders' element={<Orders />} />
+                  <Route path="/order/:orderId" element={<OrderConfirmation />} />
+                  <Route path="/request-reset" element={<RequestReset />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
+                  <Route path="/auth-success" element={<AuthSuccess />} />
+                  <Route path="/blog" element={<BlogList />} />
+                  <Route path="/blog/:slug" element={<BlogDetail />} />
+                  <Route path="/write-blog" element={<WriteBlog />} />
+                  <Route path="/forgot-password" element={<RequestReset />} />
+                  <Route path="/payment-confirmation/:orderId" element={<PaymentConfirmation />} />
+                  {/* <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/legal/terms" element={<TermsConditions />} />
+                  <Route path="/legal/shipping" element={<ShippingPolicy />} />
+                  <Route path="/legal/returns" element={<ReturnPolicy />} /> */}
+                  <Route path="*" element={<div className='text-center text-2xl'>404 Not Found</div>} />
+                </Routes>
+              </AnimatePresence>
+              <Footer />
+            </>
+          )}
         </ShopContextProvider>
       </AuthProvider>
     </GoogleOAuthProvider>

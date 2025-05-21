@@ -13,8 +13,7 @@ const PlaceOrder = () => {
   const elements = useElements();
   const { currency } = useContext(ShopContext);
   const { user } = useAuth();
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const [showPreOrderLoginPrompt, setShowPreOrderLoginPrompt] = useState(!user);
+  const [showGuestWarning, setShowGuestWarning] = useState(!user);
   const [orderId, setOrderId] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -195,118 +194,33 @@ const PlaceOrder = () => {
     }
   };
 
-  if (showPreOrderLoginPrompt) {
+  if (showGuestWarning) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Before You Place Your Order</h2>
-              <p className="text-gray-600 mb-4">
-                Creating an account will help you track your order and view your order history.
-              </p>
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-yellow-700">
-                      As a guest, you won't be able to track your order status or view your order history.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Guest Checkout</h2>
+              <p className="text-gray-600 mb-4">You are checking out as a guest. Please note:</p>
+              <ul className="text-left text-gray-600 space-y-2 mb-8">
+                <li>• You will not be able to track your order status</li>
+                <li>• You will not have access to order history</li>
+                <li>• You will need to create an account to track future orders</li>
+              </ul>
             </div>
-
-            <div className="space-y-4">
+            <div className="flex justify-center space-x-4">
               <button
-                onClick={() => navigate('/login', { state: { from: '/place-order' } })}
-                className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                onClick={() => navigate('/login')}
+                className="bg-gray-900 text-white py-3 px-8 rounded-lg hover:bg-gray-800 transition-colors"
               >
-                Login to Your Account
+                Login to Track Order
               </button>
               <button
-                onClick={() => navigate('/register', { state: { from: '/place-order' } })}
-                className="w-full bg-white text-gray-900 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Create New Account
-              </button>
-              <button
-                onClick={() => setShowPreOrderLoginPrompt(false)}
-                className="w-full text-gray-600 hover:text-gray-900 transition-colors"
+                onClick={() => setShowGuestWarning(false)}
+                className="bg-gray-200 text-gray-900 py-3 px-8 rounded-lg hover:bg-gray-300 transition-colors"
               >
                 Continue as Guest
               </button>
-            </div>
-
-            <div className="mt-8 text-center text-sm text-gray-500">
-              <p>You can always create an account later to track your order.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (showLoginPrompt) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h2>
-              <p className="text-gray-600">Your order has been placed successfully.</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">Order Details</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Order Number:</span>
-                  <span className="font-medium">{orderId}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Total Amount:</span>
-                  <span className="font-medium">{currency} {orderSummary.total.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Payment Method:</span>
-                  <span className="font-medium">{formData.paymentMethod === 'card' ? 'Credit Card' : 'Cash on Delivery'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center mb-8">
-              <p className="text-gray-600 mb-4">
-                To track your order and view your order history, please create an account or login.
-              </p>
-              <div className="space-y-4">
-                <button
-                  onClick={() => navigate('/login', { state: { from: `/order/${orderId}` } })}
-                  className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => navigate('/register', { state: { from: `/order/${orderId}` } })}
-                  className="w-full bg-white text-gray-900 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Create Account
-                </button>
-                <button
-                  onClick={() => navigate('/')}
-                  className="w-full text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  Continue as Guest
-                </button>
-              </div>
-            </div>
-
-            <div className="text-center text-sm text-gray-500">
-              <p>You can always login later to track your order using your order number.</p>
             </div>
           </div>
         </div>

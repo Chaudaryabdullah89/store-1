@@ -86,9 +86,29 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.post('/api/auth/login', { email, password });
+      console.log('Attempting login for:', email);
+      
+      const response = await api.post('/api/auth/login', { 
+        email: email.toLowerCase(),
+        password 
+      });
+      
+      console.log('Login response:', response.data);
+      
+      if (!response.data) {
+        throw new Error('No response data received');
+      }
+
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+
       const { token, user } = response.data;
       
+      if (!token || !user) {
+        throw new Error('Invalid response format');
+      }
+
       // Store auth data
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
@@ -98,9 +118,19 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      return user;
+      return response.data;
     } catch (error) {
       console.error('Login error:', error);
+      
+      // Clear any existing auth data
+      clearAuth();
+      
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        const errorMessage = error.response.data.message || error.response.data.error || 'Login failed';
+        throw new Error(errorMessage);
+      }
+      
       throw error;
     }
   };

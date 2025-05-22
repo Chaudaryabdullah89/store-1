@@ -7,6 +7,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
+  },
+  validateStatus: function (status) {
+    return status >= 200 && status < 500; // Accept all status codes less than 500
   }
 });
 
@@ -32,6 +35,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Add CORS headers
+    config.headers['Access-Control-Allow-Origin'] = '*';
+    config.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,PATCH,OPTIONS';
+    config.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
 
     // Log request in development
     if (import.meta.env.DEV) {

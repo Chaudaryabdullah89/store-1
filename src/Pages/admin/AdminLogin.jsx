@@ -38,19 +38,14 @@ const AdminLogin = () => {
     try {
       console.log('Starting admin login process...');
       
-      // First, try to login using the API directly
-      const response = await api.post('/api/auth/login', {
-        email: formData.email,
-        password: formData.password
-      });
-
-      const { token, user } = response.data;
-
-      if (!token || !user) {
-        throw new Error('Invalid response from server');
+      // Use the auth context login function
+      const userData = await login(formData.email, formData.password);
+      
+      if (!userData) {
+        throw new Error('Login failed');
       }
 
-      if (user.role !== 'admin') {
+      if (userData.role !== 'admin') {
         // Clear any existing auth data
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -60,15 +55,12 @@ const AdminLogin = () => {
       // If we get here, the user is an admin
       // Store the auth data
       if (formData.rememberMe) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', userData.token);
+        localStorage.setItem('user', JSON.stringify(userData));
       } else {
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('token', userData.token);
+        sessionStorage.setItem('user', JSON.stringify(userData));
       }
-      
-      // Set the auth token for future requests
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       toast.success('Login successful!');
       

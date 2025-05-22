@@ -15,10 +15,9 @@ import Footer from './Components/Fotter';
 import Navbar from './Components/navbar';
 import Search from './Components/Search';
 import Preloader from './Components/Preloader';
-import ProtectedRoute from './Components/ProtectedRoute';
 import AdminLayout from './Components/AdminLayout';
 
-// Pagess
+// Pages
 import About from './Pages/About';
 import Cart from './Pages/cart';
 import Collection from './Pages/Collection';
@@ -53,13 +52,6 @@ import AdminSettings from './Pages/admin/AdminSettings';
 import AdminBlogs from './Pages/admin/AdminBlogs';
 import AddBlog from './Pages/admin/AddBlog';
 import Discounts from './Pages/admin/Discounts';
-// import ShippingMethods from './Pages/admin/ShippingMethods';
-
-// Customer Service Pages
-// import PrivacyPolicy from './Pages/customer-service/PrivacyPolicy';
-// import TermsConditions from './Pages/customer-service/TermsConditions';
-// import ShippingPolicy from './Pages/customer-service/ShippingPolicy';
-// import ReturnPolicy from './Pages/customer-service/ReturnPolicy';
 
 // Initialize Stripe
 const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
@@ -110,24 +102,23 @@ function App() {
                   <Route path='/register' element={<Register />} />
                   <Route path='/order' element={<Order />} />
                   <Route path='/collection' element={<Collection />} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/profile" element={<Profile />} />
                   <Route path="/place-order" element={<PlaceOrder />} />
                   <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
                   <Route path="/admin/login" element={<AdminLogin />} />
-                  <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminLayout><AdminProducts /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/add-product" element={<ProtectedRoute requireAdmin><AdminLayout><AddProduct /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/edit-product/:id" element={<ProtectedRoute requireAdmin><AdminLayout><EditProduct /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/customers" element={<ProtectedRoute requireAdmin><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/blogs" element={<ProtectedRoute requireAdmin><AdminLayout><AdminBlogs /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/add-blog" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/edit-blog/:id" element={<ProtectedRoute requireAdmin><AdminLayout><AddBlog /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/orders/:orderId" element={<ProtectedRoute requireAdmin><AdminLayout><OrderDetails /></AdminLayout></ProtectedRoute>} />
-                  <Route path="/admin/discounts" element={<ProtectedRoute requireAdmin><AdminLayout><Discounts /></AdminLayout></ProtectedRoute>} />
-                 
+                  <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
+                  <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
+                  <Route path="/admin/add-product" element={<AdminLayout><AddProduct /></AdminLayout>} />
+                  <Route path="/admin/edit-product/:id" element={<AdminLayout><EditProduct /></AdminLayout>} />
+                  <Route path="/admin/customers" element={<AdminLayout><AdminCustomers /></AdminLayout>} />
+                  <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
+                  <Route path="/admin/blogs" element={<AdminLayout><AdminBlogs /></AdminLayout>} />
+                  <Route path="/admin/add-blog" element={<AdminLayout><AddBlog /></AdminLayout>} />
+                  <Route path="/admin/edit-blog/:id" element={<AdminLayout><AddBlog /></AdminLayout>} />
+                  <Route path="/admin/orders/:orderId" element={<AdminLayout><OrderDetails /></AdminLayout>} />
+                  <Route path="/admin/discounts" element={<AdminLayout><Discounts /></AdminLayout>} />
                   <Route path="/product" element={<Product />}>
                     <Route path=':productId' element={<Product />} />
                   </Route>
@@ -141,10 +132,6 @@ function App() {
                   <Route path="/write-blog" element={<WriteBlog />} />
                   <Route path="/forgot-password" element={<RequestReset />} />
                   <Route path="/payment-confirmation/:orderId" element={<PaymentConfirmation />} />
-                  {/* <Route path="/legal/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/legal/terms" element={<TermsConditions />} />
-                  <Route path="/legal/shipping" element={<ShippingPolicy />} />
-                  <Route path="/legal/returns" element={<ReturnPolicy />} /> */}
                   <Route path="*" element={<div className='text-center text-2xl'>404 Not Found</div>} />
                 </Routes>
               </AnimatePresence>
@@ -169,10 +156,19 @@ function App() {
                   <Route path='/register' element={<Register />} />
                   <Route path='/order' element={<Order />} />
                   <Route path='/collection' element={<Collection />} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/profile" element={<Profile />} />
                   <Route path="/place-order" element={<PlaceOrder />} />
                   <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
                   <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
+                  <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
+                  <Route path="/admin/add-product" element={<AdminLayout><AddProduct /></AdminLayout>} />
+                  <Route path="/admin/edit-product/:id" element={<AdminLayout><EditProduct /></AdminLayout>} />
+                  <Route path="/admin/customers" element={<AdminLayout><AdminCustomers /></AdminLayout>} />
+                  <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
+                  <Route path="/admin/blogs" element={<AdminLayout><AdminBlogs /></AdminLayout>} />
                   <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
                   <Route path="/admin/orders" element={<ProtectedRoute requireAdmin><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />

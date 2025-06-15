@@ -381,31 +381,16 @@ const Profile = () => {
                   <FiShoppingBag className="w-5 h-5" />
                   <span>Orders</span>
                 </button>
-                <button
-                  onClick={() => setActiveTab('wishlist')}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'wishlist'
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <FiHeart className="w-5 h-5" />
-                  <span>Wishlist</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab('settings')}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'settings'
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
+                <Link
+                  to="/admin/login"
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors text-gray-600 hover:bg-gray-50"
                 >
                   <FiSettings className="w-5 h-5" />
-                  <span>Settings</span>
-                </button>
+                  <span>Admin Login</span>
+                </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors text-red-600 hover:bg-red-50"
                 >
                   <FiLogOut className="w-5 h-5" />
                   <span>Logout</span>
